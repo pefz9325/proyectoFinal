@@ -1,6 +1,6 @@
 using tiendita.almacen;
 
-namespace tiendita.inventario
+namespace tiendita.Funciones
 {
     public class Operaciones
     {
@@ -20,22 +20,26 @@ namespace tiendita.inventario
         public static string sumarStock(string nombreProducto, int cantidad)
         {
             int indice = Data.Productos.IndexOf(nombreProducto);
-            if (indice > 0)
+            if (indice >= 0)
             {
                 Data.Stock[indice] += (cantidad);
-            }
-            return ("¡Ingreso procesado!");   
-        }
 
+                guardarDatos();
+                return ("¡Stock actualizado!"); 
+            }
+            return ("El producto no existe");
+        }
+        
         //Si se requiere actualizar stock manualmente.
         public static string actualizarStock(string nombreProducto, int cantidad)
         {
             
             int indice = Data.Productos.IndexOf(nombreProducto);
-            if (indice > 0)
+            if (indice >= 0)
             {
                 Data.Stock[indice] = (cantidad);
-            }   
+            }
+            guardarDatos();
             return ("¡Ajustes realizado!");
         } 
             
@@ -48,7 +52,7 @@ namespace tiendita.inventario
                 Data.Productos.RemoveAt(indice);
                 Data.Stock.RemoveAt(indice);
                 Data.precio.RemoveAt(indice);
-                Console.WriteLine("Producto eliminado con exito");
+                guardarDatos();
                 return true;
             }
             Console.WriteLine("El producto no existe");
@@ -74,7 +78,9 @@ namespace tiendita.inventario
                 {
                     if (Data.Stock[i] <= 5)
                     {
-                        Console.WriteLine($"{i + 1,-5} {Data.Productos[i],-15} {Data.Stock[i],-10:N0}");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"¡ALERTA !{i + 1,-5} {Data.Productos[i]} {Data.Stock[i]}");
+                        Console.ResetColor();
                     }
                 }
                 Console.WriteLine("La cantidad del producto es minima se recomienda reabastecer");
@@ -93,12 +99,62 @@ namespace tiendita.inventario
 
         //funcion para generar ventas    
         public static double generarVentas(int indice, int cantidad)
+
         {
             Data.Stock[indice] -= cantidad;
 
             double total = Data.precio[indice] * cantidad;
 
+            guardarDatos();
             return total;
         }
+       
+       //funcion para buscar productos
+        public static void buscarProducto(string nombreProducto)
+        {
+            int indice = Data.Productos.IndexOf(nombreProducto);
+            if (indice >= 0)
+            {
+                Console.WriteLine($"Producto encontrado: {Data.Productos[indice]} | Cantidad: {Data.Stock[indice]:N0} | Precio: {Data.precio[indice]:C2}");
+            }
+            else
+            {
+                Console.WriteLine("El producto no existe");
+            }
+        }
+
+        //funcion para guardar los datos en el archivo de texto
+        public static void guardarDatos()
+        {
+            using (StreamWriter writer = new StreamWriter("inventario.txt"))
+            {
+                for (int i = 0; i < Data.Productos.Count; i++)
+                {
+                    writer.WriteLine($"{Data.Productos[i]},{Data.Stock[i]},{Data.precio[i]}");
+                }
+            }
+        }
+
+        public static void cargarDatos()
+        {
+            if (File.Exists("inventario.txt"))
+            {
+                Data.Productos.Clear();
+                Data.Stock.Clear();
+                Data.precio.Clear();
+
+                string[] lineas = File.ReadAllLines("inventario.txt");
+                foreach (string linea in lineas)
+                {
+                    string[] partes = linea.Split(',');
+                    if (partes.Length == 3)
+                    {
+                        Data.Productos.Add(partes[0]);
+                        Data.Stock.Add(int.Parse(partes[1]));
+                        Data.precio.Add(double.Parse(partes[2]));
+                    }
+                }
+            }
+        }   
     }
 }

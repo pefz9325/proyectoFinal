@@ -1,13 +1,12 @@
-﻿using tiendita.menu;
-using tiendita.almacen;
-using tiendita.inventario;
+﻿using tiendita.Funciones;
 namespace inicio
 {
     class Program
     {
         static void Main()
         {
-           tiendita.menu.Menu.tMenu();
+            Operaciones.cargarDatos();
+            tiendita.menu.Menu.tMenu();
         }
     }
 }

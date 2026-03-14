@@ -1,5 +1,5 @@
 using tiendita.almacen;
-using tiendita.inventario;
+using tiendita.Funciones;
 
 //Menu principal con lo que el usuario interactua con el sistema
 namespace tiendita.menu
@@ -16,7 +16,8 @@ namespace tiendita.menu
                 Console.WriteLine("------------------La tiendita-----------------");
                 Console.WriteLine("  [A]   NUEVO INGRESO    │  [D]  ELIMINAR PRODUCTO");
                 Console.WriteLine("  [B]   VER INVENTARIO   │  [E]      GENERAR VENTA");
-                Console.WriteLine("  [C]   AJUSTAR STOCK    │  [S]             SALIR");
+                Console.WriteLine("  [C]   AJUSTAR STOCK    │  [F]    BUSCAR PRODUCTO");
+                Console.WriteLine("             [S]    SALIR DEL PROGRAMA            ");
                 Console.WriteLine("Seleccione una accion");
                 accion = Console.ReadLine().Trim().ToUpper();
 
@@ -24,6 +25,7 @@ namespace tiendita.menu
                 {
                     case "A":
                             insertarProductos();
+                            Operaciones.guardarDatos();
                         break;
 
                     case "B":
@@ -38,20 +40,29 @@ namespace tiendita.menu
                         if (opcionU == 1)
                         {
                             actualizarStock();
+                            Operaciones.guardarDatos();
                         }
                         else
                         {
                             sumarStock();
+                            Operaciones.guardarDatos();
                         }
                         break;
 
                     case "D":
+                            Operaciones.obtenerProductos();
                             eliminaraProducto();
                         break;
 
                     case "E":
                             Operaciones.alertaStock();
                             generarVentas();
+                            Operaciones.guardarDatos();
+                        break;
+                    case "F":
+                            buscarProducto();
+                            Console.WriteLine("Presione cualquier tecla para volver al menu principal");
+                            Console.ReadKey();
                         break;
 
                     case "S":
@@ -64,6 +75,7 @@ namespace tiendita.menu
                 }
             }while (accion != "S");
         }
+        //Esta es la parte interactiva con el usuario para insertar productos a la tiendita
         static void insertarProductos()
         {
              while (true)
@@ -123,7 +135,7 @@ namespace tiendita.menu
                         try
                         {
                             Console.WriteLine("Ingrese el precio del producto");
-                            precioU = int.Parse(Console.ReadLine().Trim());
+                            precioU = double.Parse(Console.ReadLine().Trim());
                             if (precioU > 0)
                             {
                                 break;
@@ -138,6 +150,9 @@ namespace tiendita.menu
                             Console.WriteLine("Error: no puede dejar el campo vacio o ingresar letras");
                         }
                     }
+                    //guardamos los productos
+                    string respuesta = Operaciones.insertarProductos(nombreProducto, cantidad, precioU);
+                    Console.WriteLine(respuesta);
                 }
             }
         }
@@ -189,6 +204,10 @@ namespace tiendita.menu
                         Console.WriteLine("Error: no puede ingresar letras o dejar el campo vacio.");
                     }
                 }
+                string respuesta = Operaciones.sumarStock(nombreProducto, cantidad);
+                Console.WriteLine(respuesta);
+                Console.WriteLine("Presione cualquier tecla para volver al menu principal");
+                Console.ReadKey();
             }     
         }
         static void actualizarStock()
@@ -239,18 +258,29 @@ namespace tiendita.menu
                         Console.WriteLine("Error: no puede ingresar letras o dejar el campo vacio.");
                     }
                 }
+                string respuesta = Operaciones.actualizarStock(nombreProducto, cantidad);
+                Console.WriteLine(respuesta);
             }
+            
         }
         static void eliminaraProducto()
         {
+            Console.Clear();
             Operaciones.obtenerProductos();
             Console.WriteLine("Elija el producto que desea eliminar");
             string nombreProducto = Console.ReadLine().Trim().ToUpper();
-            while (nombreProducto.Length < 0)
+            while (nombreProducto.Length == 0)
             {
                 Console.WriteLine("Error: No puede dejar el campo producto vacio");
                 nombreProducto = Console.ReadLine().Trim().ToUpper();
             }
+            bool resultado = Operaciones.eliminaraProducto(nombreProducto);
+            if (resultado)
+            {
+                Console.WriteLine("Producto eliminado con exito");
+            }
+            Console.WriteLine("Presione cualquier tecla para volver al menu principal");
+            Console.ReadKey();
         }
         static void generarVentas()
         {
@@ -259,46 +289,83 @@ namespace tiendita.menu
             Data.carritosubtotales.Clear();
             while (true)
             {
+                Console.Clear();
                 Operaciones.alertaStock();
                 Console.WriteLine("--------Generar ventas-------");
-                Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
                 Operaciones.obtenerProductos();
+
+                Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
                 string nombreProducto = Console.ReadLine().Trim().ToUpper();
+
                 if (nombreProducto == "SI")
                 {
                     break;
                 }
+
                 int indice = Data.Productos.IndexOf(nombreProducto);
                 if (indice == -1)
                 {
                     Console.WriteLine("El producto no existe");
+                    Console.ReadKey();
+                    continue;
                 }
                 Console.WriteLine($"Precio: {Data.precio[indice]:C2} | cantidad disponible: {Data.Stock[indice]:N0}");
-                Console.WriteLine("Selecciona la cantidad a vender");               
+                Console.WriteLine("\nSelecciona la cantidad a vender");               
                 if (int.TryParse(Console.ReadLine(), out int cantidad) && cantidad > 0)
                 {
                     if (Data.Stock[indice] >= cantidad)
                     {
-                        double totalVenta = Operaciones.generarVentas(indice, cantidad);
-                        Console.Clear();
-                        Console.WriteLine("******************RECIBO DE VENTAS******************");
-                        Console.WriteLine($"Fecha: {DateTime.Now:Now:dd/MM/yyyy}");
-                        Console.WriteLine($"Hora: {DateTime.Now:hh/mm/ss}");
-                        Console.WriteLine("**************************************");
-                        Console.WriteLine($"Productos: {Data.Productos[indice]}");
-                        Console.WriteLine($"Cantidad: {cantidad:N0}");
-                        Console.WriteLine($"precio unitario: {Data.precio[indice]:C2}");
-                        Console.WriteLine("----------------------------------------------------");
-                        Console.WriteLine($"TOTAL: {totalVenta:C2}");
-                        Console.WriteLine("Presione una tecla para contibuar");
-                        Console.ReadKey();
+                        double subtotal = Operaciones.generarVentas(indice, cantidad);
+
+                       Data.carritoProductos.Add(Data.Productos[indice]);
+                       Data.carritoCantidades.Add(cantidad);
+                       Data.carritosubtotales.Add(subtotal);
+                       Console.WriteLine("Agregado al carrito");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: no hay stock suficiente");
                     }
                 }
-                else
+                Console.WriteLine("\nPresiona una tecla para continuar....");
+                Console.ReadKey();
+                
+            }
+            if (Data.carritoProductos.Count > 0)
+            {
+                Console.Clear();
+                Console.WriteLine("-------FACTURA DE VENTAS-------");
+                Console.WriteLine($"Fecha: {DateTime.Now: dd/MM/yyyy}  | {DateTime.Now: hh:mm:ss}");
+
+                double totalFinal = 0;
+                for (int i = 0; i < Data.carritoCantidades.Count; i++)
                 {
-                    Console.WriteLine("Error: no hay stock suficiente");
+                    Console.WriteLine($"{Data.carritoCantidades[i],-7:N0} {Data.carritoProductos[i],-20} {Data.carritosubtotales[i],-10:C2}");
+                    totalFinal += Data.carritosubtotales[i];
                 }
-            }    
+                Console.WriteLine("\n-------------------------------");
+                Console.WriteLine($"Total a pagar: {totalFinal:C2}");
+            }
+            else
+            {
+                Console.WriteLine("No se han agregado productos al carrito.");
+            }
+            Console.WriteLine("Presione cualquier tecla para volver al menu principal");
+            Console.ReadKey();   
         }
-    }
+        //funcion para buscar productos
+         static void buscarProducto()
+        {
+            Console.WriteLine("Ingrese el nombre del producto a buscar");
+            string nombreProducto = Console.ReadLine().Trim().ToUpper();
+            while (nombreProducto.Length == 0)
+            {
+                Console.WriteLine("No puede dejar el campo producto vacio");
+                nombreProducto = Console.ReadLine().Trim().ToUpper();
+            } 
+            Operaciones.buscarProducto(nombreProducto);
+            Console.WriteLine("Presione cualquier tecla para volver al menu principal");
+            Console.ReadKey(); 
+        }
+    }   
 }
