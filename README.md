@@ -5,7 +5,8 @@ pequeño negocio desde la computadora. Permite llevar el control de qué
 productos tienes, cuánto cuestan y hacer ventas rápidas.
 
 ## 🌟 ¿Qué puedes hacer con este programa?
-* **Guardar Productos**: Puedes registrar cosas nuevas (como "Leche" o "Pan") con su precio y cuántos tienes.
+* **Guardar Productos**: Puedes registrar cosas nuevas (como "Leche" o "Pan") 
+con su precio y cuántos tienes.
 * **Controlar el Inventario**: Si te llega más mercancía, puedes sumar al stock existente fácilmente.
 * **Hacer Ventas**: Puedes elegir varios productos, el programa resta lo que vendiste de tu lista y al final te da el total a cobrar (tu factura).
 * **Alertas de "Se acaba el producto"**: El programa te avisa con letras rojas si te quedan 5 unidades o menos de algo para que compres más.
@@ -16,3 +17,5 @@ productos tienes, cuánto cuestan y hacer ventas rápidas.
 * **menu.cs**: Contiene todas las preguntas y opciones que ves en pantalla.
 * **funciones.cs**: Es el "cerebro" que hace las cuentas y guarda la información en el archivo.
 * **data.cs**: Es el lugar donde se guardan las listas de productos mientras el programa está abierto.
+* **Recuerde profesor que le tire por mensaje por whatsapp y me dijo que si lo dividia me daria puntos extras creane que coji mucha lucha 
+* **Con este proyecto y esa bendita separacion y llamando variables y cosas que se me olvidaban, pase buenas.
