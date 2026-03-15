@@ -251,7 +251,7 @@ namespace tiendita.Funciones
             Console.WriteLine("--------Generar ventas-------");
             obtenerProductos();
             Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
-            string
+            string nombreProducto;
             do
             {
                 Console.WriteLine("Nombre del producto: ");
@@ -293,7 +293,8 @@ namespace tiendita.Funciones
                     Console.WriteLine("Error: cantidad inválida");
                 }
                 Console.WriteLine("Si desea finalizar la venta escriba SI, si desea agregar otro producto presione enter");
-            }while ("Y");    
+                nombreProducto = Console.ReadLine().Trim().ToUpper();
+            }while (nombreProducto != "SI");    
 
             if (Data.carritoProductos.Count > 0)
             {
