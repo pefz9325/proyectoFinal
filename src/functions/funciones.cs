@@ -7,56 +7,198 @@ namespace tiendita.Funciones
         //Metododos para gestionar todos los datos de la tiendita
 
         //funcion para ingresar productos
-        public static string insertarProductos(string nombreProducto, int cantidad, double precioU)
+        public static void insertarProductos()
         {
-            //Guardamso la informacion
-            Data.Productos.Add(nombreProducto);
-            Data.Stock.Add(cantidad);
-            Data.precio.Add(precioU);
-            return ("Producto registrado con exito");
-        }
-
-        //Funcion para sumar un stock si vienen 20 productos se suman no se sobrescriben
-        public static string sumarStock(string nombreProducto, int cantidad)
-        {
-            int indice = Data.Productos.IndexOf(nombreProducto);
-            if (indice >= 0)
+            int cantidad=0;
+            while (true)
             {
-                Data.Stock[indice] += (cantidad);
-
+                Console.Clear();
+                //Funcion para insertar todos los productos a la tiendita
+                Console.WriteLine("si desea volver al menu principal escriba SI");
+                //insertamos el nombre del producto
+                Console.WriteLine("\nRegistro de nuevos productos");
+                Console.WriteLine("Ingrese el nombre del producto");
+                Console.WriteLine("Nombre del producto: ");
+                string nombreProducto = Console.ReadLine().Trim().ToUpper();
+                //Metodo para salir del menu de registro de productos
+                if (nombreProducto == "SI")
+                {
+                    break;
+                }
+                //si inserta un valor vacio
+                while (nombreProducto.Length == 0 )
+                {
+                    Console.WriteLine("No puede dejar el campo vacio");
+                    nombreProducto = Console.ReadLine().Trim().ToUpper();
+                }
+                //validamos que el producto no exista
+                if (Data.Productos.Contains(nombreProducto))
+                {
+                    Console.WriteLine("Error: El producto ya existe en la lista.");
+                    Console.ReadKey();
+                    continue;
+                }
+                else
+                
+                {
+                    //ingresamos la cantidad y validamos
+                    Console.WriteLine("Ingrese la cantidad del producto");
+                    Console.Write("Cantidad: ");
+                    while (!int.TryParse(Console.ReadLine().Trim(), out cantidad) || cantidad <= 0)
+                    {
+                        Console.WriteLine("Error: el numero no puede ser menor a cero ni tener letras");      
+                    }
+                }                    
+                //validamos de que el usuario no deje el campo vacio y que sea numero
+                double precioU;
+                System.Console.Write("Precio unitario: ");
+                while (!double.TryParse(Console.ReadLine().Trim(), out precioU) || precioU <= 0)
+                {
+                     Console.WriteLine("Error: el numero no puede ser menor a cero ni tener letras");
+                }
+                //agregamos los datos a las listas
+                Data.Productos.Add(nombreProducto);
+                Data.Stock.Add(cantidad);
+                Data.precio.Add(precioU);
                 guardarDatos();
-                return ("¡Stock actualizado!"); 
+                Console.WriteLine("Presione cualquier tecla para volver a registra otro.....");
+                Console.ReadKey();
             }
-            return ("El producto no existe");
         }
         
-        //Si se requiere actualizar stock manualmente.
-        public static string actualizarStock(string nombreProducto, int cantidad)
+        //Funcion para sumar un stock si vienen 20 productos se suman no se sobrescriben
+        public static void sumarStock()
         {
+            while (true)
+            {   
+                Console.Clear();
+                Console.WriteLine("Ingrese el nombre del producto para ingresar el stock\no 'SI' para volver al menu");
+                //Listamos los productos
+                obtenerProductos();
+                //ingresamos el nombre del producto
+                Console.Write("Nombre del producto: ");
+                string nombreProducto = Console.ReadLine().Trim().ToUpper();
+                if (nombreProducto == "SI")
+                {
+                    break;
+                }
+                else if (nombreProducto.Length == 0)
+                {
+                    Console.WriteLine("No puede dejar el campo producto vacio.");
+                    continue;
+                }
+                if (Data.Productos.IndexOf(nombreProducto) == -1)
+                {
+                    Console.WriteLine("Este producto no existe ingrese uno valido");
+                    Console.ReadKey();
+                    continue;
+                }
+                int cantidad;
+                //agregamos la cantidad
+                Console.WriteLine("Inserte la cantidad del producto nuevo");
+                Console.WriteLine("Cantidad a sumar: ");
+                while(!int.TryParse(Console.ReadLine().Trim(), out cantidad) || cantidad <= 0)
+                {
+                    Console.WriteLine("Error: el numero no puede ser menor a cero ni tener letras");
+                }
             
-            int indice = Data.Productos.IndexOf(nombreProducto);
-            if (indice >= 0)
-            {
-                Data.Stock[indice] = (cantidad);
+                int indice = Data.Productos.IndexOf(nombreProducto);
+                if (indice >= 0)
+                {
+                    Data.Stock[indice] += cantidad;
+                    guardarDatos();
+                    Console.WriteLine("¡Stock actualizado!");
+                    Console.ReadKey();
+                }
             }
-            guardarDatos();
-            return ("¡Ajustes realizado!");
-        } 
+        }
+
+        //Si se requiere actualizar stock manualmente.
+        public static void actualizarStock() //hay que arreglarlo
+        {
+           while (true)
+            {   
+                Console.Clear();
+                Console.WriteLine("Ingrese el nombre del producto para modificar el stock\no 'SI' para volver al menu");
+                //Listamos los productos
+                obtenerProductos();
+                //ingresamos el nombre del producto
+                Console.Write("Nombre del producto: ");
+                string nombreProducto = Console.ReadLine().Trim().ToUpper();
+                if (nombreProducto == "SI")
+                {
+                    break;
+                }
+                else if (nombreProducto.Length == 0)
+                {
+                    Console.WriteLine("No puede dejar el campo producto vacio.");
+                    continue;
+                }
+                if (Data.Productos.IndexOf(nombreProducto) == -1)
+                {
+                    Console.WriteLine("Este producto no existe ingrese uno valido");
+                    Console.ReadKey();
+                    continue;
+                }
+                int cantidad;
+                //agregamos la cantidad
+                Console.WriteLine("Inserte la cantidad del producto nuevo");
+                Console.WriteLine("Cantidad a establecer: ");
+                while(!int.TryParse(Console.ReadLine().Trim(), out cantidad) || cantidad <= 0)
+                {
+                    Console.WriteLine("Error: el numero no puede ser menor a cero ni tener letras");
+                }
+            
+                int indice = Data.Productos.IndexOf(nombreProducto);
+                if (indice >= 0)
+                {
+                    Data.Stock[indice] = cantidad;
+                    guardarDatos();
+                    Console.WriteLine("¡Stock actualizado!");
+                    Console.ReadKey();
+                }
+            }
+        }
             
         //Funcion para eliminar productos
-        public static bool eliminaraProducto(string nombreProducto)
+        public static void eliminaraProducto()
         {
-            int indice = Data.Productos.IndexOf(nombreProducto);
-            if (indice >= 0)
+            while (true)
             {
-                Data.Productos.RemoveAt(indice);
-                Data.Stock.RemoveAt(indice);
-                Data.precio.RemoveAt(indice);
-                guardarDatos();
-                return true;
+                Console.WriteLine("Elija el producto que desea eliminar");
+                Console.WriteLine("Si desea volver al menu principal escriba SI");
+                obtenerProductos();
+                Console.WriteLine("Producto a eliminar: ");
+                string nombreProducto = Console.ReadLine().Trim().ToUpper();
+                if (nombreProducto == "SI")
+                {
+                    break;  
+                } 
+
+                while (nombreProducto.Length == 0)
+                {
+                    Console.WriteLine("Error: No puede dejar el campo producto vacio");
+                    nombreProducto = Console.ReadLine().Trim().ToUpper();
+                }
+                bool resultado = Data.Productos.Contains(nombreProducto) == true; 
+                if (resultado)
+                {           
+                    int indice = Data.Productos.IndexOf(nombreProducto);
+                    if (indice >= 0)
+                    {
+                        Data.Productos.RemoveAt(indice);
+                        Data.Stock.RemoveAt(indice);
+                        Data.precio.RemoveAt(indice);
+                        Console.WriteLine("Producto eliminado con exito"); 
+                        guardarDatos();
+                        Console.ReadKey();
+                    }
+                }       
+                else
+                {
+                Console.WriteLine("El producto no existe");
+                }
             }
-            Console.WriteLine("El producto no existe");
-            return false;
         }
 
         //Aviso si el stock esta en el minimo permitido
@@ -98,28 +240,114 @@ namespace tiendita.Funciones
         }    
 
         //funcion para generar ventas    
-        public static double generarVentas(int indice, int cantidad)
-
+        public static void generarVentas()
         {
-            Data.Stock[indice] -= cantidad;
-
-            double total = Data.precio[indice] * cantidad;
-
-            guardarDatos();
-            return total;
-        }
-       
-       //funcion para buscar productos
-        public static void buscarProducto(string nombreProducto)
-        {
-            int indice = Data.Productos.IndexOf(nombreProducto);
-            if (indice >= 0)
+            Data.carritoProductos.Clear();
+            Data.carritoCantidades.Clear();
+            Data.carritosubtotales.Clear();
+            
+            Console.Clear();
+            alertaStock();
+            Console.WriteLine("--------Generar ventas-------");
+            obtenerProductos();
+            Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
+            string
+            do
             {
-                Console.WriteLine($"Producto encontrado: {Data.Productos[indice]} | Cantidad: {Data.Stock[indice]:N0} | Precio: {Data.precio[indice]:C2}");
+                Console.WriteLine("Nombre del producto: ");
+                nombreProducto = Console.ReadLine().Trim().ToUpper();
+
+                if (nombreProducto == "SI")
+                {
+                    break;
+                }
+
+                int indice = Data.Productos.IndexOf(nombreProducto);
+                if (indice == -1)
+                {
+                    Console.WriteLine("El producto no existe");
+                    Console.ReadKey();
+                    continue;
+                }
+                Console.WriteLine($"Precio: {Data.precio[indice]:C2} | cantidad disponible: {Data.Stock[indice]:N0}");
+                Console.WriteLine("\nSelecciona la cantidad a vender");
+                Console.WriteLine("Cantidad: ");              
+                if (int.TryParse(Console.ReadLine(), out int cantidad) && cantidad > 0)
+                {
+                    if (Data.Stock[indice] >= cantidad)
+                    {
+                        double subtotal = Data.precio[indice] * cantidad;
+                        Data.carritoProductos.Add(Data.Productos[indice]);
+                        Data.carritoCantidades.Add(cantidad);
+                        Data.carritosubtotales.Add(subtotal);
+                        Data.Stock[indice] -= cantidad;
+                        Console.WriteLine("Agregado al carrito");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: no hay stock suficiente");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error: cantidad inválida");
+                }
+                Console.WriteLine("Si desea finalizar la venta escriba SI, si desea agregar otro producto presione enter");
+            }while ("Y");    
+
+            if (Data.carritoProductos.Count > 0)
+            {
+                Console.Clear();
+                Console.WriteLine("-------factura de venta-------");
+                Console.WriteLine($"{"Producto",-15} {"Cantidad",-10} {"Subtotal",-10}");
+                Console.WriteLine($"Fecha: {DateTime.Now: dd/MM/yyyy HH:mm:ss}");
+                Console.WriteLine($"{"Cant":,-7} {"Precio":,-20} {"Subtotal":,-10}");
+                double totalFinal = 0;
+                for (int i = 0; i < Data.carritoProductos.Count; i++)
+                {
+                    Console.WriteLine($"{Data.carritoProductos[i],-20} {Data.carritoCantidades[i],-7:N0} {Data.carritosubtotales[i],-10:C2}");
+                    totalFinal += Data.carritosubtotales[i];
+                }
+                Console.WriteLine($"\nTotal a pagar: {totalFinal:C2}\n");
+                guardarDatos();
             }
             else
             {
-                Console.WriteLine("El producto no existe");
+                Console.WriteLine("No se ha realizado ninguna venta");
+            }
+            Console.WriteLine("Presione cualquier tecla para volver al menu principal");
+            Console.ReadKey();
+        }
+       
+         //funcion para buscar productos
+        public static void buscarProducto()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("----------------Buscar productos----------------");
+                Console.WriteLine("Ingrese el nombre del producto a buscar o si para salir");
+                string nombreProducto = Console.ReadLine().Trim().ToUpper();
+                if (nombreProducto == "SI")
+                {
+                    break;
+                }
+                while (nombreProducto.Length == 0)
+                {
+                    Console.WriteLine("No puede dejar el campo producto vacio");
+                    nombreProducto = Console.ReadLine().Trim().ToUpper();
+                } 
+                int indice = Data.Productos.IndexOf(nombreProducto);
+                if (indice >= 0)
+                {
+                    Console.WriteLine($"Producto encontrado: {Data.Productos[indice]} | Cantidad: {Data.Stock[indice]:N0} | Precio: {Data.precio[indice]:C2}");
+                }
+                else
+                {
+                    Console.WriteLine($"El producto {nombreProducto} no existe en el inventario");
+                }
+                Console.WriteLine("\nPresione cualquier tecla para buscar otro producto o volver al menu principal");
+                Console.ReadKey();
             }
         }
 
