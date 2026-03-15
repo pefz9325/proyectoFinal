@@ -1,21 +1,63 @@
-# 🛒 Mi Tiendita - Sistema de Control
+# Proyecto Final - Inventario de Computadoras
 
-Este es un programa sencillo hecho en **C#** para ayudar a manejar un 
-pequeño negocio desde la computadora. Permite llevar el control de qué 
-productos tienes, cuánto cuestan y hacer ventas rápidas.
+## 🧾 Descripción
 
-## 🌟 ¿Qué puedes hacer con este programa?
-* **Guardar Productos**: Puedes registrar cosas nuevas (como "Leche" o "Pan") 
-con su precio y cuántos tienes.
-* **Controlar el Inventario**: Si te llega más mercancía, puedes sumar al stock existente fácilmente.
-* **Hacer Ventas**: Puedes elegir varios productos, el programa resta lo que vendiste de tu lista y al final te da el total a cobrar (tu factura).
-* **Alertas de "Se acaba el producto"**: El programa te avisa con letras rojas si te quedan 5 unidades o menos de algo para que compres más.
-* **No pierdes tus datos**: Todo se guarda en un archivo de texto llamado `inventario.txt`. Aunque apagues la computadora, tus productos seguirán ahí la próxima vez que abras el programa.
+Este es un proyecto de consola en C# (.NET 10) para gestionar un inventario de computadoras. Incluye:
 
-## 📂 ¿Cómo está organizado el código?
-* **Inicio.cs**: Es el botón de "encendido" del programa.
-* **menu.cs**: Contiene todas las preguntas y opciones que ves en pantalla.
-* **funciones.cs**: Es el "cerebro" que hace las cuentas y guarda la información en el archivo.
-* **data.cs**: Es el lugar donde se guardan las listas de productos mientras el programa está abierto.
-* **Recuerde profesor que le tire por mensaje por whatsapp y me dijo que si lo dividia me daria puntos extras creane que coji mucha lucha 
-* **Con este proyecto y esa bendita separacion y llamando variables y cosas que se me olvidaban, pase buenas.
+- Registro de equipos
+- Modificación de datos
+- Búsqueda y listado
+- Guardado/lectura desde archivo de texto (`inventario.txt`)
+
+La aplicación está organizada en un menú principal con opciones para administrar el inventario de manera sencilla.
+
+## 🚀 Tecnologías
+
+- .NET 10
+- C#
+- Proyecto de consola
+
+## 📁 Estructura del proyecto
+
+```
+proyectoFinal/
+├── src/
+│   ├── menu.cs
+│   ├── dataBase/data.cs
+│   └── functions/funciones.cs
+├── inventario.txt
+├── Inicio.cs
+├── proyectoFinal.csproj
+└── README.md
+```
+
+## 🛠️ Requisitos
+
+- .NET SDK 10
+- Visual Studio 2022/2023 o VS Code
+
+## ▶️ Cómo ejecutar
+
+1. Abre una terminal en `c:\Users\Owner\Documents\Tareas del itla\proyectoFinal`
+2. Compila y ejecuta:
+
+```bash
+dotnet run
+```
+
+3. Sigue las opciones del menú en consola.
+
+## 📌 Uso básico
+
+1. Al iniciar, verá el menú principal.
+2. Elija una opción para:
+   - Agregar nuevo equipo
+   - Listar inventario
+   - Buscar por identificador
+   - Editar o eliminar registro
+3. Los cambios se guardan en `inventario.txt`.
+
+## 🧠 Notas importantes
+
+- Asegúrate de no borrar `inventario.txt` si ya contiene datos.
+- El formato interno de guardado está basado en líneas de texto.
