@@ -28,6 +28,7 @@ namespace tiendita.menu
 
                     case "B":
                     Operaciones.obtenerProductos();
+                    Console.WriteLine("Presione cualquier tecla para volver al menu principal");
                     Console.ReadKey();
                     break;
 

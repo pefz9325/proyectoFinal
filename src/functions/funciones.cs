@@ -215,13 +215,13 @@ namespace tiendita.Funciones
             if (alertaStock)
             {
                 Console.WriteLine("¡Alerta stock baja!");
-                Console.WriteLine($"{"ID",-5} {"Producto",-15} {"Cantidad",-10}");
+                Console.WriteLine($"{"Producto",-15} {"Cantidad",-10}");
                 for (int i = 0; i < Data.Stock.Count; i++)
                 {
                     if (Data.Stock[i] <= 5)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"¡ALERTA !{i + 1,-5} {Data.Productos[i]} {Data.Stock[i]}");
+                        Console.WriteLine($"{Data.Productos[i],-15} {Data.Stock[i],-10:N0}");
                         Console.ResetColor();
                     }
                 }
@@ -245,79 +245,89 @@ namespace tiendita.Funciones
             Data.carritoProductos.Clear();
             Data.carritoCantidades.Clear();
             Data.carritosubtotales.Clear();
-            
-            Console.Clear();
-            alertaStock();
             Console.WriteLine("--------Generar ventas-------");
-            obtenerProductos();
             Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
+            Console.Clear();
             string nombreProducto;
-            do
+            while (true)
             {
-                Console.WriteLine("Nombre del producto: ");
-                nombreProducto = Console.ReadLine().Trim().ToUpper();
+                Console.WriteLine("--------Generar ventas-------");
+                Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
+                Console.Clear();
+                do
+                {
+                    alertaStock();
+                    obtenerProductos();
+                    Console.WriteLine("Nombre del producto: ");
+                    nombreProducto = Console.ReadLine().Trim().ToUpper();
 
-                if (nombreProducto == "SI")
-                {
-                    break;
-                }
-
-                int indice = Data.Productos.IndexOf(nombreProducto);
-                if (indice == -1)
-                {
-                    Console.WriteLine("El producto no existe");
-                    Console.ReadKey();
-                    continue;
-                }
-                Console.WriteLine($"Precio: {Data.precio[indice]:C2} | cantidad disponible: {Data.Stock[indice]:N0}");
-                Console.WriteLine("\nSelecciona la cantidad a vender");
-                Console.WriteLine("Cantidad: ");              
-                if (int.TryParse(Console.ReadLine(), out int cantidad) && cantidad > 0)
-                {
-                    if (Data.Stock[indice] >= cantidad)
+                    if (nombreProducto == "SI")
                     {
-                        double subtotal = Data.precio[indice] * cantidad;
-                        Data.carritoProductos.Add(Data.Productos[indice]);
-                        Data.carritoCantidades.Add(cantidad);
-                        Data.carritosubtotales.Add(subtotal);
-                        Data.Stock[indice] -= cantidad;
-                        Console.WriteLine("Agregado al carrito");
+                        break;
+                    }
+
+                    int indice = Data.Productos.IndexOf(nombreProducto);
+                    if (indice == -1)
+                    {
+                        Console.WriteLine("El producto no existe");
+                        Console.ReadKey();
+                        continue;
+                    }
+                    Console.WriteLine($"Precio: {Data.precio[indice]:C2} | cantidad disponible: {Data.Stock[indice]:N0}");
+                    Console.WriteLine("\nSelecciona la cantidad a vender");
+                    Console.Write("Cantidad: ");              
+                    if (int.TryParse(Console.ReadLine(), out int cantidad) && cantidad > 0)
+                    {
+                        if (Data.Stock[indice] >= cantidad)
+                        {
+                            double subtotal = Data.precio[indice] * cantidad;
+                            Data.carritoProductos.Add(Data.Productos[indice]);
+                            Data.carritoCantidades.Add(cantidad);
+                            Data.carritosubtotales.Add(subtotal);
+                            Data.Stock[indice] -= cantidad;
+                            Console.WriteLine("Agregado al carrito");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: no hay stock suficiente");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Error: no hay stock suficiente");
+                        Console.WriteLine("Error: cantidad inválida");
                     }
+                    Console.WriteLine("Si desea finalizar la venta escriba SI, si desea agregar otro producto presione enter");
+                    nombreProducto = Console.ReadLine().Trim().ToUpper();
+                }while (nombreProducto != "SI");    
+
+                if (Data.carritoProductos.Count > 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("-------factura de venta-------");
+                    Console.WriteLine($"{"Producto",-10} {"Cantidad",-10} {"Subtotal",-10}");
+                    Console.WriteLine($"Fecha: {DateTime.Now: dd/MM/yyyy HH:mm:ss}");
+                    Console.WriteLine($"{"Cant":,-7} {"Precio":,-20} {"Subtotal":,-10}");
+                    double totalFinal = 0;
+                    for (int i = 0; i < Data.carritoProductos.Count; i++)
+                    {
+                        Console.WriteLine($"{Data.carritoProductos[i],-20} {Data.carritoCantidades[i],-7:N0} {Data.carritosubtotales[i],-10:C2}");
+                        totalFinal += Data.carritosubtotales[i];
+                    }
+                    Console.WriteLine($"\nTotal a pagar: {totalFinal:C2}\n");
+                    guardarDatos();
                 }
                 else
                 {
-                    Console.WriteLine("Error: cantidad inválida");
+                    Console.WriteLine("No se ha realizado ninguna venta"); Console.ReadKey();
                 }
-                Console.WriteLine("Si desea finalizar la venta escriba SI, si desea agregar otro producto presione enter");
-                nombreProducto = Console.ReadLine().Trim().ToUpper();
-            }while (nombreProducto != "SI");    
-
-            if (Data.carritoProductos.Count > 0)
-            {
-                Console.Clear();
-                Console.WriteLine("-------factura de venta-------");
-                Console.WriteLine($"{"Producto",-15} {"Cantidad",-10} {"Subtotal",-10}");
-                Console.WriteLine($"Fecha: {DateTime.Now: dd/MM/yyyy HH:mm:ss}");
-                Console.WriteLine($"{"Cant":,-7} {"Precio":,-20} {"Subtotal":,-10}");
-                double totalFinal = 0;
-                for (int i = 0; i < Data.carritoProductos.Count; i++)
+                Console.WriteLine("Si desea volver al menu principal escriba MENU, o presione enter para realizar otra venta");
+                string respuestaU = Console.ReadLine().Trim().ToUpper();
+                if (respuestaU == "MENU")
                 {
-                    Console.WriteLine($"{Data.carritoProductos[i],-20} {Data.carritoCantidades[i],-7:N0} {Data.carritosubtotales[i],-10:C2}");
-                    totalFinal += Data.carritosubtotales[i];
+                    break;
                 }
-                Console.WriteLine($"\nTotal a pagar: {totalFinal:C2}\n");
-                guardarDatos();
             }
-            else
-            {
-                Console.WriteLine("No se ha realizado ninguna venta");
-            }
-            Console.WriteLine("Presione cualquier tecla para volver al menu principal");
-            Console.ReadKey();
+
         }
        
          //funcion para buscar productos
