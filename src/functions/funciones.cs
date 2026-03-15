@@ -245,15 +245,12 @@ namespace tiendita.Funciones
             Data.carritoProductos.Clear();
             Data.carritoCantidades.Clear();
             Data.carritosubtotales.Clear();
-            Console.WriteLine("--------Generar ventas-------");
-            Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
             Console.Clear();
             string nombreProducto;
             while (true)
             {
                 Console.WriteLine("--------Generar ventas-------");
                 Console.WriteLine("Escriba el nombre del producto (o SI para salir)");
-                Console.Clear();
                 do
                 {
                     alertaStock();
