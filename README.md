@@ -36,16 +36,22 @@ proyectoFinal/
 - .NET SDK 10
 - Visual Studio 2022/2023 o VS Code
 
-## ▶️ Cómo ejecutar
+## ▶️ Cómo compilar y ejecutar
 
 1. Abre una terminal en `c:\Users\Owner\Documents\Tareas del itla\proyectoFinal`
-2. Compila y ejecuta:
+2. Compilar el proyecto:
+
+```bash
+dotnet build
+```
+
+3. Ejecutar el proyecto:
 
 ```bash
 dotnet run
 ```
 
-3. Sigue las opciones del menú en consola.
+4. Sigue las opciones del menú en consola.
 
 ## 📌 Uso básico
 
