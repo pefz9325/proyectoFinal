@@ -1,9 +1,10 @@
-PAPA,953,250
-CEBOLLA,202,250
-HUEVOS,5,200
-HABICHUELAS,300,350
-ARROZ,485,150
-AZUCAR,692,750
-SAL,662,555
-SALAMI,878,350
-JAMON,300,650
+Producto: PAPA, Cantidad: 953, Precio: 250
+Producto: CEBOLLA, Cantidad: 202, Precio: 250
+Producto: HUEVOS, Cantidad: 5, Precio: 200
+Producto: HABICHUELAS, Cantidad: 300, Precio: 350
+Producto: ARROZ, Cantidad: 485, Precio: 150
+Producto: AZUCAR, Cantidad: 692, Precio: 750
+Producto: SAL, Cantidad: 662, Precio: 555
+Producto: SALAMI, Cantidad: 878, Precio: 350
+Producto: JAMON, Cantidad: 300, Precio: 650
+Producto: HARINA, Cantidad: 300, Precio: 700

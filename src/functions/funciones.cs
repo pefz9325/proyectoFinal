@@ -9,7 +9,7 @@ namespace tiendita.Funciones
         //funcion para ingresar productos
         public static void insertarProductos()
         {
-            int cantidad=0;
+            int cantidad;
             while (true)
             {
                 Console.Clear();
@@ -366,7 +366,7 @@ namespace tiendita.Funciones
             {
                 for (int i = 0; i < Data.Productos.Count; i++)
                 {
-                    writer.WriteLine($"{Data.Productos[i]},{Data.Stock[i]},{Data.precio[i]}");
+                    writer.WriteLine($"Producto: {Data.Productos[i]}, Cantidad: {Data.Stock[i]}, Precio: {Data.precio[i]}");
                 }
             }
         }
